@@ -26,9 +26,11 @@
       <input name="ask" />
       <button>물어보기</button>
     </form>
+    <section id="chatContainer"></section>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
       const chatForm = document.querySelector("#chatForm");
+      const chatContainer = document.querySelector("#chatContainer");
       chatForm.addEventListener("submit", async (event) => {
         event.preventDefault();
         const formData = new FormData(event.target);
@@ -37,7 +39,14 @@
           "/chat",
           Object.fromEntries(formData),
         );
-        console.log("response", response.data);
+        // console.log("response", response.data);
+        const { result } = response.data;
+        const p = document.createElement("p");
+        p.textContent = `
+            질문 : ${formData.get("ask")}<br>
+            대답 : ${result}
+        `;
+        chatContainer.append(p);
       });
     </script>
   </body>
