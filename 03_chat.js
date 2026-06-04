@@ -16,11 +16,20 @@ const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 const groqAI = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 // 미들웨어
-app.use(express.json()) // body의 json 해석
+app.use(express.json()); // body의 json 해석
 
 // 대화
-app.post("/chat/gen", (req, res) => {
-  res.json({ msg: "GoogleGenAI" });
+app.post("/chat/gen", async (req, res) => {
+  // const { body } = req;
+  const { ask = "질문 없음", model = "gemma-4-26b-a4b-it" } = req.body; // default를 준 상황
+  //   console.log("body", body);
+  console.log("ask", ask);
+  const response = await genAI.models.generateContent({
+    model,
+    contents: ask,
+  });
+  //   res.json({ msg: "GoogleGenAI" });
+  res.json({ answer: response.text });
 });
 app.post("/chat/groq", (req, res) => {
   res.json({ msg: "GroqAI" });
