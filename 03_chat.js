@@ -31,8 +31,17 @@ app.post("/chat/gen", async (req, res) => {
   //   res.json({ msg: "GoogleGenAI" });
   res.json({ answer: response.text });
 });
-app.post("/chat/groq", (req, res) => {
-  res.json({ msg: "GroqAI" });
+
+app.post("/chat/groq", async (req, res) => {
+  const { ask = "질문 없음", model = "openai/gpt-oss-120b" } = req.body; // default를 준 상황
+  //   console.log("body", body);
+  console.log("ask", ask);
+  const response = await groqAI.chat.completions.create({
+    messages: [{ role: "user", content: ask }],
+    model,
+  });
+  //   res.json({ msg: "GroqAI" });
+  res.json({ msg: response.choices[0].message.content });
 });
 
 // 서버 활성화 (연결할 포트 지정)
