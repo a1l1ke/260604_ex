@@ -19,8 +19,12 @@ app.use(express.static(path.join(__dirname, "public")));
 app.post("/chat", async (req, res) => {
   // 입력 (JSON)
   const { provider, model, ask } = req.body;
+  console.log("provider", provider);
+  console.log("model", model);
+  console.log("ask", ask);
   // 로직 (AI Provider)
   let result;
+  console.log("[서버 요청 시작]");
   switch (true) {
     case provider === "google":
       console.log("google 제공자 요청");
@@ -35,6 +39,7 @@ app.post("/chat", async (req, res) => {
       res.status(404).json({ msg: "존재하지 않는 Provider" });
       return;
   }
+  console.log("[서버 요청 완료]");
   // 출력 (JSON)
   res.json({
     result,
