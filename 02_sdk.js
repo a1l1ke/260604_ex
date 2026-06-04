@@ -22,6 +22,9 @@ const express = require("express");
 // https://www.npmjs.com/package/@google/genai
 // npm i @google/genai
 const { GoogleGenAI } = require("@google/genai");
+// npm i groq-sdk
+// https://www.npmjs.com/package/groq-sdk
+const Groq = require("groq-sdk");
 
 const app = express();
 const PORT = 3001; // node 3xxx. 5xxx (python). java 8xxx
@@ -30,6 +33,7 @@ const PORT = 3001; // node 3xxx. 5xxx (python). java 8xxx
 // SDK
 // API key should be set when using the Gemini API.
 const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 app.get("/", async (req, res) => {
   const modelName = "gemma-4-31b-it";
@@ -39,6 +43,19 @@ app.get("/", async (req, res) => {
   });
   res.json({
     answer: result.text,
+  });
+});
+
+app.get("/groq", async (req, res) => {
+  const modelName = "openai/gpt-oss-120b";
+  const result = await groq.chat.completions.create({
+    messages: [{ role: "user", content: "점심 메뉴 추천해줘" }],
+    model: modelName,
+  });
+  console.log(JSON.stringify(result));
+  res.json({
+    answer: result.choices[0].message.content,
+    // 이렇게 응답이 복잡한 건 -> langchainjs 쓰면 간결하게 볼 수 있음
   });
 });
 
