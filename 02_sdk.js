@@ -31,6 +31,17 @@ const PORT = 3001; // node 3xxx. 5xxx (python). java 8xxx
 // API key should be set when using the Gemini API.
 const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
+app.get("/", async (req, res) => {
+  const modelName = "gemma-4-31b-it";
+  const result = await genAI.models.generateContent({
+    model: modelName,
+    contents: "점심 메뉴 추천해줘",
+  });
+  res.json({
+    answer: result.text,
+  });
+});
+
 // POSTMAN -> localhost:3001
 app.listen(PORT, () => {
   console.log(`${PORT}(으)로 작동중`);
