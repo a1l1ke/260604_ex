@@ -30,7 +30,14 @@
     <script>
       const chatForm = document.querySelector("#chatForm");
       chatForm.addEventListener("submit", async (event) => {
-        
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        console.log("formData", ...formData);
+        const response = await axios.post(
+          "/chat",
+          Object.fromEntries(formData),
+        );
+        console.log("response", response.data);
       });
     </script>
   </body>
